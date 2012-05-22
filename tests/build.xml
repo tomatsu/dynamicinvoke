@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="tests" default="all" basedir=".">
+
+  <property file="build.properties"/>
+
+  <target name="all" depends="build.dirs,compile.test,test"/>
+
+  <target name="build.dirs">
+    <mkdir dir="${test.classdir}"/>
+  </target>
+
+  <target name="compile.test" depends="build.dirs">
+    <javac srcdir="${test.src.dir}"
+           destdir="${test.classdir}"
+           classpath="${build.classpath}:junit.jar"
+           sourcepath="${src.dir}"
+           target="${javac.target}"
+           source="${javac.source}"
+           compiler="${javac.compiler}"
+           debug="${javac.debug}"
+           verbose="${javac.verbose}"
+           deprecation="${javac.deprecation}"
+           optimize="${javac.optimize}"/>
+  </target>
+
+  <target name="test" depends="test.selection,test.exception,test.bean,test.field,test.benchmark">
+  </target>
+
+  <target name="test.selection" depends="compile.test">
+    <java classname="MethodSelectionTest" classpath="../dynamicinvoke.jar:junit.jar:${test.classdir}" fork="yes"/>
+  </target>
+  <target name="test.exception" depends="compile.test">
+    <java classname="ExceptionTest" classpath="../dynamicinvoke.jar:junit.jar:${test.classdir}" fork="yes"/>
+  </target>
+  <target name="test.bean" depends="compile.test">
+    <java classname="BeanTest" classpath="../dynamicinvoke.jar:junit.jar:${test.classdir}" fork="yes"/>
+  </target>
+  <target name="test.field" depends="compile.test">
+    <java classname="FieldTest" classpath="../dynamicinvoke.jar:junit.jar:${test.classdir}" fork="yes"/>
+  </target>
+  <target name="test.benchmark" depends="compile.test">
+    <java classname="BenchmarkTest" classpath="../dynamicinvoke.jar:junit.jar:${test.classdir}" fork="yes"/>
+  </target>
+
+  <target name="test.cache" depends="compile.test">
+    <java classname="MemoryCacheTest" classpath="../dynamicinvoke.jar:junit.jar:${test.classdir}" fork="yes"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="${test.classdir}"/>
+  </target>
+
+  <target name="test.junit" depends="compile.test">
+    <junit fork="yes">
+        <classpath>
+            <pathelement location="dynamicinvoke.jar:${test.classdir}"/>
+        </classpath>
+        <test name="DynamicRuntimeTest" classpath="dynamicinvoke.jar:${test.classdir}"/>
+    </junit>
+  </target>
+
+</project>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="dynamicinvoke" default="all" basedir=".">
+
+  <!-- You may need to set ${javacc.home}  -->
+  <property file="build.properties"/>
+
+  <!-- Project Properties -->
+  <property name="build.classdir" value="classes"/>
+  <property name="src.dir" value="src"/>
+
+  <target name="all" depends="default"/>
+
+  <target name="default" depends="compile,jar"/>
+
+  <target name="build.dirs">
+    <mkdir dir="${build.classdir}/META-INF"/>
+  </target>
+
+  <target name="compile" depends="build.dirs">
+
+    <javac srcdir="${src.dir}"
+           destdir="${build.classdir}"
+           classpath="${build.classdir}:${build.classpath}"
+           sourcepath="${src.dir}"
+           target="${javac.target}"
+           source="${javac.source}"
+           compiler="${javac.compiler}"
+           debug="${javac.debug}"
+           verbose="${javac.verbose}"
+           deprecation="${javac.deprecation}"
+           optimize="${javac.optimize}">
+      <compilerarg value="-Xlint:unchecked"/>
+     </javac>
+  </target>
+
+  <target name="jar">
+     <tstamp>
+       <format property="build.number" pattern="yyyyMMddHHmmss" locale="en"/>
+     </tstamp>
+     <jar jarfile="${jar.file}">
+       <fileset dir="classes"/>
+       <fileset dir="resource"/>
+     </jar> 
+  </target>
+
+  <target name="javadoc">
+    <javadoc destdir="${javadoc.dir}"
+	     source="${javac.source}"
+	     sourcepath="src"
+	     packagenames="*"
+	     charset="${javadoc.encoding}">
+    </javadoc>
+  </target>
+
+  <target name="test">
+    <ant dir="tests"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="${build.classdir}"/>
+    <delete file="${jar.file}"/>
+  </target>
+
+</project>
